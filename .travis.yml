@@ -1,0 +1,29 @@
+language: java
+jdk: oraclejdk8
+install: true
+
+services:
+  - docker
+  
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+jobs:
+  include:
+    - stage: all tests
+      script:
+        - ./gradlew -s -Dorg.gradle.daemon=false clean build functionalTest publishToMavenLocal
+    - stage: release
+      script: skip
+      deploy:
+        provider: script
+        script:
+          - ./gradlew -s clean build release -PbintrayUsername=$BINTRAY_USER -PbintrayKey=$BINTRAY_KEY -PreleaseUsername=$RELEASE_USERNAME -PreleasePassword=$RELEASE_PASSWORD -PreleaseRepository=libs-release-local -PciRelease=true
+        on:
+          tags: true
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/

@@ -1,0 +1,72 @@
+allprojects {
+
+    apply plugin: 'groovy'
+    apply from: "$rootDir/gradle/artifacts.gradle"
+    apply from: "$rootDir/gradle/jacoco.gradle"
+    apply from: "$rootDir/gradle/checkstyle.gradle"
+    apply from: "$rootDir/gradle/publishing.gradle"
+    apply from: "$rootDir/gradle/functional-test.gradle"
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url artifactoryURL
+            credentials {
+                username = artifactoryUser
+                password = artifactoryPassword
+            }
+        }
+    }
+
+    dependencies {
+        compile localGroovy(), gradleApi()
+        compile group: 'com.aries', name: 'gradle-docker-application-plugin', version: '0.9.0'
+        testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+            exclude group: 'org.codehaus.groovy'
+        }
+
+        testCompile "junit:junit:4.12"
+        testCompile ('org.assertj:assertj-core:3.8.0')
+    }
+
+    tasks.withType(GroovyCompile) {
+        options.compilerArgs += ['-Xlint:-options']
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+    tasks.withType (Test) {
+        maxParallelForks = 2
+        testLogging {
+            showStandardStreams = true
+            events 'started', 'passed', 'failed'
+        }
+        jacoco {
+            append = false
+            destinationFile = file("$buildDir/jacoco/${name}.exec")
+            classDumpDir = file("$buildDir/jacoco/${name}_ClassDump")
+        }
+    }
+
+    test {
+        description 'Used for running unit tests.'
+        exclude '**/**MockTest.class'
+        exclude '**/**IntegTest.class'
+    }
+
+    task mockTest(type: Test) {
+        description 'Used for running mock tests.'
+        include '**/**MockTest.class'
+    }
+
+    task integTest(type: Test) {
+        description 'Used for running integ tests.'
+        include '**/**IntegTest.class'
+    }
+
+    build.finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+}
