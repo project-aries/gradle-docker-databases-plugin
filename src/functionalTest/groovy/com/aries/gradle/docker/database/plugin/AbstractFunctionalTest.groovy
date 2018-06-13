@@ -87,7 +87,7 @@ abstract class AbstractFunctionalTest extends Specification {
     }
 
     public static String randomString() {
-        'gdap-' + UUID.randomUUID().toString().replaceAll("-", "")
+        'gddp-' + UUID.randomUUID().toString().replaceAll("-", "")
     }
 
     /**
