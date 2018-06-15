@@ -16,8 +16,6 @@
 
 package com.aries.gradle.docker.database.plugin
 
-import com.aries.gradle.docker.database.plugin.AbstractFunctionalTest
-
 import static java.util.concurrent.TimeUnit.MINUTES
 
 import org.gradle.testkit.runner.BuildResult
@@ -25,7 +23,7 @@ import spock.lang.Timeout
 
 /**
  *
- *  Functional tests to perform up, pause, and down tasks on dockerized databases.
+ *  Functional tests to perform up, stop, and down tasks on a dockerized database.
  *
  */
 class PostgresFunctionalTest extends AbstractFunctionalTest {
