@@ -38,6 +38,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
 
         // 3.) create our various dockerized databases
         createPostgresApplication(appContainers)
+        createSqlserverApplication(appContainers)
     }
 
     // create the default dockerized postgres database
@@ -45,18 +46,44 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
         appContainers.create('postgres', {
             main {
                 repository = 'postgres'
-                tag = 'alpine'
+                tag = '10.4-alpine'
                 create {
-                    env = ["CREATED_BY=${GradleDockerDatabasePlugin.class.simpleName}"]
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}"]
+                    portBindings = [':5432'] // grab a random port to connect to
                 }
                 stop {
                     cmd = ['su', 'postgres', "-c", "/usr/local/bin/pg_ctl stop -m fast"]
-                    successOnExitCodes = [0, 127, 137]
+                    successOnExitCodes = [0, 127, 137] // cover stopping the container the hard way as well as bringing it down gracefully
                     timeout = 60000
                     probe(60000, 10000)
                 }
                 liveness {
                     probe(300000, 10000, 'database system is ready to accept connections')
+                }
+            }
+        })
+    }
+
+    // create the default dockerized postgres database
+    private void createSqlserverApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+        appContainers.create('sqlserver', {
+            main {
+                repository = 'microsoft/mssql-server-linux'
+                tag = '2017-CU7'
+                create {
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
+                    'ACCEPT_EULA=Y',
+                    'MSSQL_PID=Developer',
+                    'SA_PASSWORD=Sqlserver123']
+                    portBindings = [':1433'] // grab a random port to connect to
+                }
+                stop {
+                    successOnExitCodes = [0]
+                    timeout = 60000
+                    probe(60000, 10000)
+                }
+                liveness {
+                    probe(300000, 10000, 'Service Broker manager has started.')
                 }
             }
         })
