@@ -39,6 +39,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
         // 3.) create our various dockerized databases
         createPostgresApplication(appContainers)
         createSqlserverApplication(appContainers)
+        createDb2Application(appContainers)
     }
 
     // create the default dockerized postgres database
@@ -74,7 +75,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                     env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
                     'ACCEPT_EULA=Y',
                     'MSSQL_PID=Developer',
-                    'SA_PASSWORD=Sqlserver123']
+                    'SA_PASSWORD=Password123!']
                     portBindings = [':1433'] // grab a random port to connect to
                 }
                 stop {
@@ -84,6 +85,36 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 }
                 liveness {
                     probe(300000, 10000, 'Service Broker manager has started.')
+                }
+            }
+        })
+    }
+
+    // create the default dockerized postgres database
+    private void createDb2Application(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+        appContainers.create('db2', {
+            main {
+                repository = 'ibmcom/db2express-c'
+                tag = '10.5.0.5-3.10.0'
+                create {
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
+                           'LICENSE=accept',
+                           'DB2INST1_PASSWORD=db2inst1']
+                    cmd = ['db2start']
+                    tty = true
+                    portBindings = [':50000'] // grab a random port to connect to
+                }
+                stop {
+                    withCommand(['su', '-', 'db2inst1', "-c", "db2stop force"])
+                    withCommand(['pkill', 'sleep'])
+                    successOnExitCodes = [0, 137]
+                    execProbe(60000, 5000)
+
+                    timeout = 60000
+                    probe(60000, 10000)
+                }
+                liveness {
+                    probe(300000, 10000, 'DB2START processing was successful.')
                 }
             }
         })
