@@ -22,3 +22,18 @@ buildscript() {
 
 apply plugin: 'gradle-docker-database-plugin'
 ```
+## Motivation and Design Goals
+
+Being based upon the [gradle-docker-application-plugin](https://github.com/project-aries/gradle-docker-application-plugin) the intent is to create dockerized database application definitions for developers to use as they see fit. Be it for desktop use, in a CICD pipeline, or for an arbitrary devops usecase you can easily manage (and customize should the need arise) a pre-defined dockerized database with a handful of tasks.
+
+## Supported Databases
+
+The below table lists the currently supported databases and their default connection details.
+
+| Database | Name | Username | Password |
+| :--- | :---: | :---: | :---: |
+| postgres | postgres | postgres | postgres |
+| sqlserver | **N/A** | SA | Password123! |
+| oracle | xe | system | oracle |
+| db2 | DB2 | db2inst1 | db2inst1 |
+
