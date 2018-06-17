@@ -65,7 +65,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
             }
             data {
                 create {
-                    volumes = ["/var/lib/postgresql/data"]
+                    volumes = ['/var/lib/postgresql/data']
                 }
             }
         })
@@ -126,6 +126,11 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 }
                 liveness {
                     probe(300000, 10000, 'DB2START processing was successful.')
+                }
+                exec {
+                    withCommand(['su', '-', 'db2inst1', "-c", "db2 create db DB2"])
+                    successOnExitCodes = [0]
+                    execProbe(300000, 5000)
                 }
             }
             data {
