@@ -40,6 +40,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
         createPostgresApplication(appContainers)
         createSqlserverApplication(appContainers)
         createDb2Application(appContainers)
+        createOracleApplication(appContainers)
     }
 
     // create the default dockerized postgres database
@@ -60,6 +61,11 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 }
                 liveness {
                     probe(300000, 10000, 'database system is ready to accept connections')
+                }
+            }
+            data {
+                create {
+                    volumes = ["/var/lib/postgresql/data"]
                 }
             }
         })
@@ -85,6 +91,11 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 }
                 liveness {
                     probe(300000, 10000, 'Service Broker manager has started.')
+                }
+            }
+            data {
+                create {
+                    volumes = ['/var/opt/mssql/data']
                 }
             }
         })
@@ -115,6 +126,37 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 }
                 liveness {
                     probe(300000, 10000, 'DB2START processing was successful.')
+                }
+            }
+            data {
+                create {
+                    volumes = ['/home/db2inst1']
+                }
+            }
+        })
+    }
+
+    // create the default dockerized postgres database
+    private void createOracleApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+        appContainers.create('oracle', {
+            main {
+                repository = 'wnameless/oracle-xe-11g'
+                tag = '18.04'
+                create {
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
+                           'ORACLE_DISABLE_ASYNCH_IO=true',
+                           'ORACLE_ALLOW_REMOTE=true']
+                    shmSize = 1073741824 // 1GB
+                    tty = true
+                    portBindings = [':1521'] // grab a random port to connect to
+                }
+                liveness {
+                    probe(300000, 10000, 'System altered.')
+                }
+            }
+            data {
+                create {
+                    volumes = ['/u01/app/oracle/oradata']
                 }
             }
         })
