@@ -33,7 +33,7 @@ The below table lists the currently supported databases and their default connec
 | Database | Name | Username | Password |
 | :--- | :---: | :---: | :---: |
 | postgres | postgres | postgres | postgres |
-| sqlserver | **N/A** | SA | Password123! |
+| sqlserver | master | SA | Passw0rd |
 | oracle | xe | system | oracle |
 | db2 | DB2 | db2inst1 | db2inst1 |
 
