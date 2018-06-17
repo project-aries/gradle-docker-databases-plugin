@@ -16,7 +16,11 @@
 
 package com.aries.gradle.docker.database.plugin
 
+import static java.util.concurrent.TimeUnit.MINUTES
+
 import org.gradle.testkit.runner.BuildResult
+
+import spock.lang.Timeout
 
 /**
  *
@@ -25,6 +29,7 @@ import org.gradle.testkit.runner.BuildResult
  */
 class OracleFunctionalTest extends AbstractFunctionalTest {
 
+    @Timeout(value = 5, unit = MINUTES)
     def "Can start, stop, and remove a oracle application stack"() {
 
         String uuid = randomString()

@@ -16,10 +16,11 @@
 
 package com.aries.gradle.docker.database.plugin
 
-import org.gradle.testkit.runner.BuildResult
-import spock.lang.Timeout
-
 import static java.util.concurrent.TimeUnit.MINUTES
+
+import org.gradle.testkit.runner.BuildResult
+
+import spock.lang.Timeout
 
 /**
  *
@@ -28,6 +29,7 @@ import static java.util.concurrent.TimeUnit.MINUTES
  */
 class Db2FunctionalTest extends AbstractFunctionalTest {
 
+    @Timeout(value = 5, unit = MINUTES)
     def "Can start, stop, and remove a db2 application stack"() {
 
         String uuid = randomString()

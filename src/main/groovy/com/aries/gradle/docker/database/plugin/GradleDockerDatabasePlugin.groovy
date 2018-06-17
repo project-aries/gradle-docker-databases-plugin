@@ -81,7 +81,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                     env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
                     'ACCEPT_EULA=Y',
                     'MSSQL_PID=Developer',
-                    'SA_PASSWORD=Password123!']
+                    'SA_PASSWORD=Passw0rd']
                     portBindings = [':1433'] // grab a random port to connect to
                 }
                 stop {
@@ -95,7 +95,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
             }
             data {
                 create {
-                    volumes = ['/var/opt/mssql/data']
+                    volumes = ['/var/opt/mssql']
                 }
             }
         })

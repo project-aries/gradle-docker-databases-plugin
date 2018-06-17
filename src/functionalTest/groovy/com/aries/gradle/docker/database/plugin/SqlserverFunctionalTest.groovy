@@ -19,6 +19,7 @@ package com.aries.gradle.docker.database.plugin
 import static java.util.concurrent.TimeUnit.MINUTES
 
 import org.gradle.testkit.runner.BuildResult
+
 import spock.lang.Timeout
 
 /**
@@ -51,7 +52,7 @@ class SqlserverFunctionalTest extends AbstractFunctionalTest {
         """
 
         when:
-            BuildResult result = build('up', 'stop', 'down')
+            BuildResult result = build('up')
 
         then:
             result.output.contains('is not running or available to inspect')

@@ -19,6 +19,7 @@ package com.aries.gradle.docker.database.plugin
 import static java.util.concurrent.TimeUnit.MINUTES
 
 import org.gradle.testkit.runner.BuildResult
+
 import spock.lang.Timeout
 
 /**
