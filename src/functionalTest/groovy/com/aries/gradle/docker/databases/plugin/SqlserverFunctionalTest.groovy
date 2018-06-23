@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.aries.gradle.docker.database.plugin
+package com.aries.gradle.docker.databases.plugin
 
 import static java.util.concurrent.TimeUnit.MINUTES
 
@@ -27,28 +27,28 @@ import spock.lang.Timeout
  *  Functional tests to perform up, stop, and down tasks on a dockerized database.
  *
  */
-class PostgresFunctionalTest extends AbstractFunctionalTest {
+class SqlserverFunctionalTest extends AbstractFunctionalTest {
 
     @Timeout(value = 5, unit = MINUTES)
-    def "Can start, stop, and remove a postgres application stack"() {
+    def "Can start, stop, and remove a sqlserver application stack"() {
 
         String uuid = randomString()
         buildFile << """
             
             applications {
-                postgres {
+                sqlserver {
                     id = "${uuid}"
                 }
             }
-            task up(dependsOn: ['postgresUp']) {
+            task up(dependsOn: ['sqlserverUp']) {
                 doLast {
-                    logger.quiet 'FOUND INSPECTION: ' + postgresUp.ext.inspection
+                    logger.quiet 'FOUND INSPECTION: ' + sqlserverUp.ext.inspection
                 }
             }
             
-            task stop(dependsOn: ['postgresStop'])
+            task stop(dependsOn: ['sqlserverStop'])
 
-            task down(dependsOn: ['postgresDown'])
+            task down(dependsOn: ['sqlserverDown'])
         """
 
         when:

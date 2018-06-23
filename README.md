@@ -1,4 +1,4 @@
-# gradle-docker-database-plugin
+# gradle-docker-databases-plugin
 
 Highly opinionated gradle plugin to start (Up), pause (Stop), and delete (Down) a dockerized database.
 
@@ -16,11 +16,11 @@ buildscript() {
         jcenter()
     }
     dependencies {
-        classpath group: 'com.aries', name: 'gradle-docker-database-plugin', version: 'X.Y.Z'
+        classpath group: 'com.aries', name: 'gradle-docker-databases-plugin', version: 'X.Y.Z'
     }
 }
 
-apply plugin: 'gradle-docker-database-plugin'
+apply plugin: 'gradle-docker-databases-plugin'
 ```
 ## Motivation and Design Goals
 
@@ -30,7 +30,7 @@ Being based upon the [gradle-docker-application-plugin](https://github.com/proje
 
 The below table lists the currently supported databases and their default connection details.
 
-| Database | Name | Username | Password |
+| Type | Name | Username | Password |
 | :--- | :---: | :---: | :---: |
 | postgres | postgres | postgres | postgres |
 | sqlserver | master | SA | Passw0rd |

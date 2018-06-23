@@ -13,7 +13,7 @@ jobs:
   include:
     - stage: all tests
       script:
-        - ./gradlew -s -Dorg.gradle.daemon=false clean build functionalTest publishToMavenLocal
+        - ./gradlew -s -Dorg.gradle.daemon=false clean build publishToMavenLocal functionalTest --tests "*Postgres*"
     - stage: release
       script: skip
       deploy:

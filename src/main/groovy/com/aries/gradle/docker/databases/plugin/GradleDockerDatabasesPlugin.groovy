@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.aries.gradle.docker.database.plugin
+package com.aries.gradle.docker.databases.plugin
 
 import com.aries.gradle.docker.application.plugin.GradleDockerApplicationPlugin
 import com.aries.gradle.docker.application.plugin.domain.AbstractApplication
+
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -25,7 +26,7 @@ import org.gradle.api.Project
 /**
  *  Plugin providing common tasks for starting (*Up), stopping (*Stop), and deleting (*Down) a dockerized database.
  */
-class GradleDockerDatabasePlugin implements Plugin<Project> {
+class GradleDockerDatabasesPlugin implements Plugin<Project> {
 
     @Override
     void apply(final Project project) {
@@ -50,7 +51,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 repository = 'postgres'
                 tag = '10.4-alpine'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}"]
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}"]
                     portBindings = [':5432'] // grab a random port to connect to
                 }
                 stop {
@@ -78,7 +79,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 repository = 'microsoft/mssql-server-linux'
                 tag = '2017-CU7'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}",
                     'ACCEPT_EULA=Y',
                     'MSSQL_PID=Developer',
                     'SA_PASSWORD=Passw0rd']
@@ -108,7 +109,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 repository = 'ibmcom/db2express-c'
                 tag = '10.5.0.5-3.10.0'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}",
                            'LICENSE=accept',
                            'DB2INST1_PASSWORD=db2inst1']
                     cmd = ['db2start']
@@ -148,7 +149,7 @@ class GradleDockerDatabasePlugin implements Plugin<Project> {
                 repository = 'wnameless/oracle-xe-11g'
                 tag = '18.04'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasePlugin.class.simpleName}",
+                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}",
                            'ORACLE_DISABLE_ASYNCH_IO=true',
                            'ORACLE_ALLOW_REMOTE=true']
                     shmSize = 1073741824 // 1GB
