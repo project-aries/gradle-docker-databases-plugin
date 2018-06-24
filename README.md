@@ -30,10 +30,10 @@ Being based upon the [gradle-docker-application-plugin](https://github.com/proje
 
 The below table lists the currently supported databases and their default connection details.
 
-| Type | Name | Username | Password |
-| :--- | :---: | :---: | :---: |
-| postgres | postgres | postgres | postgres |
-| sqlserver | master | SA | Passw0rd |
-| oracle | xe | system | oracle |
-| db2 | DB2 | db2inst1 | db2inst1 |
+| Type | Name | Username | Password | Commands/Tasks |
+| :--- | :---: | :---: | :---: | :---: |
+| postgres | postgres | postgres | postgres | **postgresUp**, **postgresStop**, **postgresDown** |
+| sqlserver | master | SA | Passw0rd | **sqlserverUp**, **sqlserverStop**, **sqlserverDown** |
+| oracle | xe | system | oracle | **oracleUp**, **oracleStop**, **oracleDown** |
+| db2 | DB2 | db2inst1 | db2inst1 | **db2Up**, **db2Stop**, **db2Down** |
 
