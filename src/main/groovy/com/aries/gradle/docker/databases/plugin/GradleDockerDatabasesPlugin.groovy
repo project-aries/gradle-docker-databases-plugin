@@ -16,8 +16,8 @@
 
 package com.aries.gradle.docker.databases.plugin
 
-import com.aries.gradle.docker.application.plugin.GradleDockerApplicationPlugin
-import com.aries.gradle.docker.application.plugin.domain.AbstractApplication
+import com.aries.gradle.docker.applications.plugin.GradleDockerApplicationsPlugin
+import com.aries.gradle.docker.applications.plugin.domain.AbstractApplication
 
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
@@ -32,10 +32,10 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
     void apply(final Project project) {
 
         // 1.) apply required plugins
-        project.plugins.apply('gradle-docker-application-plugin')
+        project.plugins.apply('gradle-docker-applications-plugin')
 
         // 2.) get docker-application container
-        final NamedDomainObjectContainer<AbstractApplication> appContainers = project.extensions.getByName(GradleDockerApplicationPlugin.EXTENSION_NAME)
+        final NamedDomainObjectContainer<AbstractApplication> appContainers = project.extensions.getByName(GradleDockerApplicationsPlugin.EXTENSION_NAME)
 
         // 3.) create our various dockerized databases
         createPostgresApplication(appContainers)

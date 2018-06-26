@@ -24,7 +24,7 @@ allprojects {
 
     dependencies {
         compile localGroovy(), gradleApi()
-        compile group: 'com.aries', name: 'gradle-docker-application-plugin', version: '0.9.4'
+        compile group: 'com.aries', name: 'gradle-docker-applications-plugin', version: '0.9.5'
         testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
             exclude group: 'org.codehaus.groovy'
         }
