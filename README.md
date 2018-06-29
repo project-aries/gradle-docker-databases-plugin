@@ -30,10 +30,10 @@ Being based upon the [gradle-docker-application-plugin](https://github.com/proje
 
 The below table lists the currently supported databases and their default connection details.
 
-| Type | Name | Username | Password | Commands/Tasks |
-| :--- | :---: | :---: | :---: | :---: |
-| postgres | postgres | postgres | postgres | **postgresUp**, **postgresStop**, **postgresDown** |
-| sqlserver | master | SA | Passw0rd | **sqlserverUp**, **sqlserverStop**, **sqlserverDown** |
-| oracle | xe | system | oracle | **oracleUp**, **oracleStop**, **oracleDown** |
-| db2 | DB2 | db2inst1 | db2inst1 | **db2Up**, **db2Stop**, **db2Down** |
+| Type | Name | Username/Password | Tasks |
+| :--- | :--- | :--- | :--- |
+| [postgres](https://hub.docker.com/_/postgres/) | postgres | postgres/postgres | **postgresUp**, **postgresStop**, **postgresDown** |
+| [sqlserver](https://hub.docker.com/r/microsoft/mssql-server-linux/) | master | SA/Passw0rd | **sqlserverUp**, **sqlserverStop**, **sqlserverDown** |
+| [oracle](https://hub.docker.com/r/wnameless/oracle-xe-11g/) | xe | system/oracle | **oracleUp**, **oracleStop**, **oracleDown** |
+| [db2](https://hub.docker.com/r/ibmcom/db2express-c/) | DB2 | db2inst1/db2inst1 | **db2Up**, **db2Stop**, **db2Down** |
 
