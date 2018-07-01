@@ -51,17 +51,17 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 repository = 'postgres'
                 tag = '10.4-alpine'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}"]
+                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}"]
                     portBindings = [':5432'] // grab a random port to connect to
                 }
                 stop {
                     cmd = ['su', 'postgres', "-c", "/usr/local/bin/pg_ctl stop -m fast"]
                     successOnExitCodes = [0, 127, 137] // cover stopping the container the hard way as well as bringing it down gracefully
                     timeout = 60000
-                    probe(60000, 10000)
+                    execStopProbe(60000, 10000)
                 }
                 liveness {
-                    probe(300000, 10000, 'database system is ready to accept connections')
+                    livenessProbe(300000, 10000, 'database system is ready to accept connections')
                 }
             }
             data {
@@ -79,19 +79,19 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 repository = 'microsoft/mssql-server-linux'
                 tag = '2017-CU7'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}",
-                    'ACCEPT_EULA=Y',
-                    'MSSQL_PID=Developer',
-                    'SA_PASSWORD=Passw0rd']
+                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}",
+                                'ACCEPT_EULA' : 'Y',
+                                'MSSQL_PID' : 'Developer',
+                                'SA_PASSWORD' : 'Passw0rd']
                     portBindings = [':1433'] // grab a random port to connect to
                 }
                 stop {
                     successOnExitCodes = [0]
                     timeout = 60000
-                    probe(60000, 10000)
+                    execStopProbe(60000, 10000)
                 }
                 liveness {
-                    probe(300000, 10000, 'Service Broker manager has started.')
+                    livenessProbe(300000, 10000, 'Service Broker manager has started.')
                 }
             }
             data {
@@ -109,9 +109,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 repository = 'ibmcom/db2express-c'
                 tag = '10.5.0.5-3.10.0'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}",
-                           'LICENSE=accept',
-                           'DB2INST1_PASSWORD=db2inst1']
+                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}",
+                               'LICENSE' : 'accept',
+                               'DB2INST1_PASSWORD' : 'db2inst1']
                     cmd = ['db2start']
                     tty = true
                     portBindings = [':50000'] // grab a random port to connect to
@@ -120,13 +120,11 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                     withCommand(['su', '-', 'db2inst1', "-c", "db2stop force"])
                     withCommand(['pkill', 'sleep'])
                     successOnExitCodes = [0, 137]
-                    execProbe(60000, 5000)
-
+                    execStopProbe(60000, 5000)
                     timeout = 60000
-                    probe(60000, 10000)
                 }
                 liveness {
-                    probe(300000, 10000, 'DB2START processing was successful.')
+                    livenessProbe(300000, 10000, 'DB2START processing was successful.')
                 }
                 exec {
                     withCommand(['su', '-', 'db2inst1', "-c", "db2 create db DB2"])
@@ -149,15 +147,15 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 repository = 'wnameless/oracle-xe-11g'
                 tag = '18.04'
                 create {
-                    env = ["CREATED_BY_PLUGIN=${GradleDockerDatabasesPlugin.class.simpleName}",
-                           'ORACLE_DISABLE_ASYNCH_IO=true',
-                           'ORACLE_ALLOW_REMOTE=true']
+                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}",
+                               'ORACLE_DISABLE_ASYNCH_IO' : 'true',
+                               'ORACLE_ALLOW_REMOTE' : 'true']
                     shmSize = 1073741824 // 1GB
                     tty = true
                     portBindings = [':1521'] // grab a random port to connect to
                 }
                 liveness {
-                    probe(300000, 10000, 'System altered.')
+                    livenessProbe(300000, 10000, 'System altered.')
                 }
             }
             data {
