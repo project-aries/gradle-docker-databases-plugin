@@ -28,31 +28,41 @@ import org.gradle.api.Project
  */
 class GradleDockerDatabasesPlugin implements Plugin<Project> {
 
+    public static final String EXTENSION_NAME = 'databases'
+
     @Override
     void apply(final Project project) {
 
         // 1.) apply required plugins
         project.plugins.apply('gradle-docker-applications-plugin')
 
-        // 2.) get docker-application container
+        // 2.) create plugin extension point
+        final GradleDockerDatabasesExtension extensionPoint = project.extensions.create(EXTENSION_NAME, GradleDockerDatabasesExtension)
+
+        // 3.) get docker-application container
         final NamedDomainObjectContainer<AbstractApplication> appContainers = project.extensions.getByName(GradleDockerApplicationsPlugin.EXTENSION_NAME)
 
-        // 3.) create our various dockerized databases
-        createPostgresApplication(appContainers)
-        createSqlserverApplication(appContainers)
-        createDb2Application(appContainers)
-        createOracleApplication(appContainers)
+        // 4.) create our various dockerized databases
+        createPostgresApplication(appContainers, extensionPoint)
+        createSqlserverApplication(appContainers, extensionPoint)
+        createDb2Application(appContainers, extensionPoint)
+        createOracleApplication(appContainers, extensionPoint)
     }
 
     // create the default dockerized postgres database
-    private void createPostgresApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+    private void createPostgresApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers,
+                                           final GradleDockerDatabasesExtension extensionPoint) {
+
         appContainers.create('postgres', {
             main {
                 repository = 'postgres'
                 tag = '10.4-alpine'
                 create {
                     envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}"]
-                    portBindings = [':5432'] // grab a random port to connect to
+
+                    // if requested use randomPorts otherwise default to main port
+                    def hostPort = extensionPoint.randomPorts ? '' : '5432'
+                    portBindings = ["${hostPort}:5432"]
                 }
                 stop {
                     cmd = ['su', 'postgres', "-c", "/usr/local/bin/pg_ctl stop -m fast"]
@@ -73,7 +83,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
     }
 
     // create the default dockerized postgres database
-    private void createSqlserverApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+    private void createSqlserverApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers,
+                                            final GradleDockerDatabasesExtension extensionPoint) {
+
         appContainers.create('sqlserver', {
             main {
                 repository = 'microsoft/mssql-server-linux'
@@ -83,7 +95,10 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                                 'ACCEPT_EULA' : 'Y',
                                 'MSSQL_PID' : 'Developer',
                                 'SA_PASSWORD' : 'Passw0rd']
-                    portBindings = [':1433'] // grab a random port to connect to
+
+                    // if requested use randomPorts otherwise default to main port
+                    def hostPort = extensionPoint.randomPorts ? '' : '1433'
+                    portBindings = ["${hostPort}:1433"]
                 }
                 stop {
                     successOnExitCodes = [0]
@@ -103,7 +118,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
     }
 
     // create the default dockerized postgres database
-    private void createDb2Application(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+    private void createDb2Application(final NamedDomainObjectContainer<AbstractApplication> appContainers,
+                                      final GradleDockerDatabasesExtension extensionPoint) {
+
         appContainers.create('db2', {
             main {
                 repository = 'ibmcom/db2express-c'
@@ -114,7 +131,10 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                                'DB2INST1_PASSWORD' : 'db2inst1']
                     cmd = ['db2start']
                     tty = true
-                    portBindings = [':50000'] // grab a random port to connect to
+
+                    // if requested use randomPorts otherwise default to main port
+                    def hostPort = extensionPoint.randomPorts ? '' : '50000'
+                    portBindings = ["${hostPort}:50000"]
                 }
                 stop {
                     withCommand(['su', '-', 'db2inst1', "-c", "db2stop force"])
@@ -141,7 +161,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
     }
 
     // create the default dockerized postgres database
-    private void createOracleApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers) {
+    private void createOracleApplication(final NamedDomainObjectContainer<AbstractApplication> appContainers,
+                                         final GradleDockerDatabasesExtension extensionPoint) {
+
         appContainers.create('oracle', {
             main {
                 repository = 'wnameless/oracle-xe-11g'
@@ -152,7 +174,10 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                                'ORACLE_ALLOW_REMOTE' : 'true']
                     shmSize = 1073741824 // 1GB
                     tty = true
-                    portBindings = [':1521'] // grab a random port to connect to
+
+                    // if requested use randomPorts otherwise default to main port
+                    def hostPort = extensionPoint.randomPorts ? '' : '1521'
+                    portBindings = ["${hostPort}:1521"]
                 }
                 liveness {
                     livenessProbe(300000, 10000, 'System altered.')

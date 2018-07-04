@@ -34,7 +34,9 @@ class SqlserverFunctionalTest extends AbstractFunctionalTest {
 
         String uuid = randomString()
         buildFile << """
-            
+            databases {
+                randomPorts()
+            }       
             applications {
                 sqlserver {
                     id = "${uuid}"
@@ -62,6 +64,8 @@ class SqlserverFunctionalTest extends AbstractFunctionalTest {
             result.output.contains('Running exec-stop on container with ID')
             result.output.contains('Removing container with ID')
             result.output.contains('RestartContainer SKIPPED')
+            result.output.contains('->1433')
+            !result.output.contains('1433->1433')
             !result.output.contains('ListImages SKIPPED')
     }
 }

@@ -34,7 +34,9 @@ class OracleFunctionalTest extends AbstractFunctionalTest {
 
         String uuid = randomString()
         buildFile << """
-            
+            databases {
+                randomPorts()
+            }
             applications {
                 oracle {
                     id = "${uuid}"
@@ -58,6 +60,8 @@ class OracleFunctionalTest extends AbstractFunctionalTest {
             result.output.contains('Running exec-stop on container with ID')
             result.output.contains('Removing container with ID')
             result.output.contains('RestartContainer SKIPPED')
+            result.output.contains('->1521')
+            !result.output.contains('1521->1521')
             !result.output.contains('ListImages SKIPPED')
     }
 }

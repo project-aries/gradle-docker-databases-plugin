@@ -35,6 +35,9 @@ class Db2FunctionalTest extends AbstractFunctionalTest {
         String uuid = randomString()
         buildFile << """
             
+            databases {
+                randomPorts()
+            }
             applications {
                 db2 {
                     id = "${uuid}"
@@ -58,6 +61,8 @@ class Db2FunctionalTest extends AbstractFunctionalTest {
             result.output.contains('Running exec-stop on container with ID')
             result.output.contains('Removing container with ID')
             result.output.contains('RestartContainer SKIPPED')
+            result.output.contains('->50000')
+            !result.output.contains('50000->50000')
             !result.output.contains('ListImages SKIPPED')
     }
 }

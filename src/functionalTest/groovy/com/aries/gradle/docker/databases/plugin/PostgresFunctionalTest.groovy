@@ -34,7 +34,9 @@ class PostgresFunctionalTest extends AbstractFunctionalTest {
 
         String uuid = randomString()
         buildFile << """
-            
+            databases {
+                randomPorts()
+            }
             applications {
                 postgres {
                     id = "${uuid}"
@@ -62,6 +64,8 @@ class PostgresFunctionalTest extends AbstractFunctionalTest {
             result.output.contains('Running exec-stop on container with ID')
             result.output.contains('Removing container with ID')
             result.output.contains('RestartContainer SKIPPED')
+            result.output.contains('->5432')
+            !result.output.contains('5432->5432')
             !result.output.contains('ListImages SKIPPED')
     }
 }
