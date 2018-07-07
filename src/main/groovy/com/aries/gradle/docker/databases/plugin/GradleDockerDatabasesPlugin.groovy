@@ -30,6 +30,10 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
 
     public static final String EXTENSION_NAME = 'databases'
 
+    private static final def sharedCreateClosure =  {
+        envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}"]
+    }
+
     @Override
     void apply(final Project project) {
 
@@ -57,8 +61,8 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
             main {
                 repository = 'postgres'
                 tag = '10.4-alpine'
+                create sharedCreateClosure
                 create {
-                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}"]
 
                     // if requested use randomPorts otherwise default to main port
                     def hostPort = extensionPoint.randomPorts ? '' : '5432'
@@ -75,6 +79,7 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 }
             }
             data {
+                create sharedCreateClosure
                 create {
                     volumes = ['/var/lib/postgresql/data']
                 }
@@ -90,9 +95,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
             main {
                 repository = 'microsoft/mssql-server-linux'
                 tag = '2017-CU7'
+                create sharedCreateClosure
                 create {
-                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}",
-                                'ACCEPT_EULA' : 'Y',
+                    envVars << ['ACCEPT_EULA' : 'Y',
                                 'MSSQL_PID' : 'Developer',
                                 'SA_PASSWORD' : 'Passw0rd']
 
@@ -110,6 +115,7 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 }
             }
             data {
+                create sharedCreateClosure
                 create {
                     volumes = ['/var/opt/mssql']
                 }
@@ -125,9 +131,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
             main {
                 repository = 'ibmcom/db2express-c'
                 tag = '10.5.0.5-3.10.0'
+                create sharedCreateClosure
                 create {
-                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}",
-                               'LICENSE' : 'accept',
+                    envVars << ['LICENSE' : 'accept',
                                'DB2INST1_PASSWORD' : 'db2inst1']
                     cmd = ['db2start']
                     tty = true
@@ -153,6 +159,7 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 }
             }
             data {
+                create sharedCreateClosure
                 create {
                     volumes = ['/home/db2inst1']
                 }
@@ -168,9 +175,9 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
             main {
                 repository = 'wnameless/oracle-xe-11g'
                 tag = '18.04'
+                create sharedCreateClosure
                 create {
-                    envVars << ['CREATED_BY_PLUGIN' : "${GradleDockerDatabasesPlugin.class.simpleName}",
-                               'ORACLE_DISABLE_ASYNCH_IO' : 'true',
+                    envVars << ['ORACLE_DISABLE_ASYNCH_IO' : 'true',
                                'ORACLE_ALLOW_REMOTE' : 'true']
                     shmSize = 1073741824 // 1GB
                     tty = true
@@ -184,6 +191,7 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
                 }
             }
             data {
+                create sharedCreateClosure
                 create {
                     volumes = ['/u01/app/oracle/oradata']
                 }
