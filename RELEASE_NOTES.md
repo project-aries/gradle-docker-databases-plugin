@@ -1,4 +1,7 @@
-### Version 0.9.3 (TBA)
+### Version 0.9.4 (TBA)
+
+### Version 0.9.3 (July 15, 2018)
+* Bump `gradle-docker-applications-plugin` to `1.0.0`
 
 ### Version 0.9.2 (July 7, 2018)
 * Bump `gradle-docker-applications-plugin` to `0.9.7`
