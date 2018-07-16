@@ -22,6 +22,7 @@ import com.aries.gradle.docker.applications.plugin.domain.AbstractApplication
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.UnknownPluginException
 
 /**
  *  Plugin providing common tasks for starting (*Up), stopping (*Stop), and deleting (*Down) a dockerized database.
@@ -38,7 +39,11 @@ class GradleDockerDatabasesPlugin implements Plugin<Project> {
     void apply(final Project project) {
 
         // 1.) apply required plugins
-        project.plugins.apply('gradle-docker-applications-plugin')
+        try {
+            project.plugins.apply('gradle-docker-applications-plugin')
+        } catch (UnknownPluginException upe) {
+            project.plugins.apply(GradleDockerApplicationsPlugin)
+        }
 
         // 2.) create plugin extension point
         final GradleDockerDatabasesExtension extensionPoint = project.extensions.create(EXTENSION_NAME, GradleDockerDatabasesExtension)

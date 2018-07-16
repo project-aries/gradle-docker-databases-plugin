@@ -1,4 +1,8 @@
-### Version 0.9.4 (TBA)
+### Version 0.9.5 (TBA)
+
+### Version 0.9.4 (July 16, 2018)
+* Bump `gradle-docker-applications-plugin` to `1.0.1`
+* Account for when plugin is applied to a script which is not the root script.
 
 ### Version 0.9.3 (July 15, 2018)
 * Bump `gradle-docker-applications-plugin` to `1.0.0`
